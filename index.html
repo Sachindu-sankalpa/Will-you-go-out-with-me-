@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="A Little Question - an interactive date invitation.">
+  <title>A Little Question ❤️</title>
+
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap');
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      width: 100%;
+      min-height: 100%;
+    }
+
+    body {
+      min-height: 100vh;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: "DM Sans", sans-serif;
+      background:
+        radial-gradient(circle at 15% 20%, #ffd6e7 0%, transparent 30%),
+        radial-gradient(circle at 85% 80%, #d8c7ff 0%, transparent 30%),
+        linear-gradient(135deg, #fff1f7, #f4eaff, #ffe5ef);
+      position: relative;
+    }
+
+    body::before,
+    body::after {
+      content: "";
+      position: fixed;
+      width: 350px;
+      height: 350px;
+      border-radius: 50%;
+      filter: blur(90px);
+      opacity: 0.45;
+      z-index: -2;
+      pointer-events: none;
+    }
+
+    body::before {
+      background: #ff7eb3;
+      top: -120px;
+      left: -100px;
+    }
+
+    body::after {
+      background: #8e7dff;
+      bottom: -130px;
+      right: -100px;
+    }
+
+    .hearts span {
+      position: fixed;
+      bottom: -50px;
+      color: rgba(233, 30, 99, 0.25);
+      font-size: 22px;
+      animation: heartFloat linear infinite;
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    .hearts span:nth-child(1) {
+      left: 10%;
+      animation-duration: 8s;
+    }
+
+    .hearts span:nth-child(2) {
+      left: 25%;
+      animation-duration: 11s;
+      animation-delay: 2s;
+    }
+
+    .hearts span:nth-child(3) {
+      left: 50%;
+      animation-duration: 9s;
+      animation-delay: 1s;
+    }
+
+    .hearts span:nth-child(4) {
+      left: 70%;
+      animation-duration: 12s;
+      animation-delay: 3s;
+    }
+
+    .hearts span:nth-child(5) {
+      left: 90%;
+      animation-duration: 10s;
+      animation-delay: 1s;
+    }
+
+    @keyframes heartFloat {
+      0% {
+        transform: translateY(0) scale(0.8) rotate(0deg);
+        opacity: 0;
+      }
+
+      20% {
+        opacity: 1;
+      }
+
+      100% {
+        transform: translateY(-110vh) scale(1.4) rotate(30deg);
+        opacity: 0;
+      }
+    }
+
+    .container {
+      width: min(92%, 520px);
+      position: relative;
+      z-index: 1;
+    }
+
+    .glass-card {
+      padding: 55px 40px;
+      text-align: center;
+      background: rgba(255, 255, 255, 0.35);
+      border: 1px solid rgba(255, 255, 255, 0.65);
+      border-radius: 32px;
+      backdrop-filter: blur(25px);
+      -webkit-backdrop-filter: blur(25px);
+      box-shadow:
+        0 30px 80px rgba(130, 70, 120, 0.18),
+        inset 0 1px 1px rgba(255, 255, 255, 0.8);
+      animation: cardAppear 0.8s ease;
+    }
+
+    @keyframes cardAppear {
+      from {
+        opacity: 0;
+        transform: translateY(30px) scale(0.95);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    .heart {
+      width: 72px;
+      height: 72px;
+      margin: 0 auto 25px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #ff4f91, #d4145a);
+      color: white;
+      font-size: 32px;
+      box-shadow: 0 12px 30px rgba(212, 20, 90, 0.35);
+      animation: heartbeat 2s infinite;
+    }
+
+    @keyframes heartbeat {
+      0%, 100% {
+        transform: scale(1);
+      }
+
+      50% {
+        transform: scale(1.08);
+      }
+    }
+
+    h1 {
+      font-family: "Playfair Display", serif;
+      font-size: clamp(34px, 7vw, 48px);
+      line-height: 1.1;
+      margin-bottom: 15px;
+      background: linear-gradient(135deg, #d4145a, #8e44ad);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .subtitle {
+      color: #6f6070;
+      font-size: 16px;
+      margin-bottom: 35px;
+    }
+
+    .buttons {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      min-width: 125px;
+      padding: 15px 28px;
+      border: none;
+      border-radius: 50px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: inherit;
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    #yesBtn {
+      color: white;
+      background: linear-gradient(135deg, #ff4f91, #d4145a);
+      box-shadow: 0 12px 30px rgba(212, 20, 90, 0.3);
+    }
+
+    #yesBtn:hover {
+      transform: translateY(-4px) scale(1.04);
+      box-shadow: 0 18px 35px rgba(212, 20, 90, 0.4);
+    }
+
+    #noBtn {
+      color: #555;
+      background: rgba(255, 255, 255, 0.65);
+      border: 1px solid rgba(255, 255, 255, 0.8);
+      position: relative;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+    }
+
+    #confirmation {
+      display: none;
+    }
+
+    .letter-card {
+      padding: 45px 35px;
+      text-align: center;
+      background: rgba(255, 255, 255, 0.5);
+      border: 1px solid rgba(255, 255, 255, 0.8);
+      border-radius: 32px;
+      backdrop-filter: blur(25px);
+      -webkit-backdrop-filter: blur(25px);
+      box-shadow: 0 30px 80px rgba(130, 70, 120, 0.2);
+      animation: cardAppear 0.8s ease;
+    }
+
+    .letter-icon {
+      font-size: 55px;
+      margin-bottom: 15px;
+    }
+
+    .letter-card h2 {
+      font-family: "Playfair Display", serif;
+      font-size: 30px;
+      margin-bottom: 15px;
+      background: linear-gradient(135deg, #d4145a, #8e44ad);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .yay {
+      color: #d4145a;
+      font-size: 22px;
+      font-weight: 700;
+      margin-bottom: 28px;
+    }
+
+    .details {
+      display: grid;
+      gap: 12px;
+    }
+
+    .detail {
+      padding: 16px;
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.55);
+      border: 1px solid rgba(255, 255, 255, 0.7);
+      color: #555;
+    }
+
+    .detail strong {
+      color: #333;
+    }
+
+    .detail span {
+      color: #d4145a;
+      font-weight: 700;
+    }
+
+    @media (max-width: 600px) {
+      .glass-card {
+        padding: 45px 22px;
+        border-radius: 26px;
+      }
+
+      .heart {
+        width: 65px;
+        height: 65px;
+        font-size: 28px;
+      }
+
+      h1 {
+        font-size: 35px;
+      }
+
+      .subtitle {
+        font-size: 15px;
+      }
+
+      .btn {
+        min-width: 115px;
+        padding: 14px 22px;
+      }
+
+      .letter-card {
+        padding: 38px 22px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="hearts" aria-hidden="true">
+    <span>♥</span>
+    <span>♡</span>
+    <span>♥</span>
+    <span>♡</span>
+    <span>♥</span>
+  </div>
+
+  <main class="container">
+    <section id="invite" class="glass-card">
+      <div class="heart" aria-hidden="true">❤️</div>
+
+      <h1>
+        Will you go out<br>
+        with me?
+      </h1>
+
+      <p class="subtitle">
+        I have a little question for someone special... ✨
+      </p>
+
+      <div class="buttons">
+        <button class="btn" id="yesBtn" type="button">Yes ❤️</button>
+        <button class="btn" id="noBtn" type="button">No 🙈</button>
+      </div>
+    </section>
+
+    <section id="confirmation" aria-live="polite">
+      <div class="letter-card">
+        <div class="letter-icon" aria-hidden="true">💌</div>
+
+        <h2>A Little Letter For You</h2>
+
+        <p class="yay">Yay! It's a date! ❤️</p>
+
+        <div class="details">
+          <div class="detail">
+            📅 <strong>Date:</strong>
+            <span id="dateText"></span>
+          </div>
+
+          <div class="detail">
+            🕐 <strong>Time:</strong>
+            <span id="timeText">7:00 PM</span>
+          </div>
+
+          <div class="detail">
+            🍽️ <strong>Plan:</strong>
+            Dinner &amp; good memories
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const noBtn = document.getElementById("noBtn");
+    const yesBtn = document.getElementById("yesBtn");
+    const invite = document.getElementById("invite");
+    const confirmation = document.getElementById("confirmation");
+    const dateText = document.getElementById("dateText");
+
+    function moveNoButton() {
+      const padding = 20;
+
+      const maxX = Math.max(
+        padding,
+        window.innerWidth - noBtn.offsetWidth - padding
+      );
+
+      const maxY = Math.max(
+        padding,
+        window.innerHeight - noBtn.offsetHeight - padding
+      );
+
+      const x = padding + Math.random() * Math.max(0, maxX - padding);
+      const y = padding + Math.random() * Math.max(0, maxY - padding);
+
+      noBtn.style.position = "fixed";
+      noBtn.style.left = `${x}px`;
+      noBtn.style.top = `${y}px`;
+    }
+
+    noBtn.addEventListener("mouseenter", moveNoButton);
+    noBtn.addEventListener("touchstart", moveNoButton, { passive: true });
+
+    yesBtn.addEventListener("click", () => {
+      const now = new Date();
+
+      dateText.textContent = now.toLocaleDateString("en-US", {
+        weekday: "long",
+        month: "long",
+        day: "numeric"
+      });
+
+      invite.style.display = "none";
+      confirmation.style.display = "block";
+    });
+  </script>
+</body>
+</html>
